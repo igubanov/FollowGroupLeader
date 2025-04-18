@@ -1,0 +1,8 @@
+## Title: Follow Group Leader
+## APIVersion: 101041
+## Author: YourName
+## Version: 1.0.0
+## DependsOn: LibGroupBroadcast
+
+FollowGroupLeader.lua
+FollowGroupLeaderUI.lua
