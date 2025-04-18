@@ -12,7 +12,7 @@
         // "param-type-mismatch",
         "codestyle-check"
     ],
-    "workspace.preloadFileSize": 700,
+    "workspace.preloadFileSize": 10000,
     "diagnostics.neededFileStatus": {
         "codestyle-check": "Any"
     },

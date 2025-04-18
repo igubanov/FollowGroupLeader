@@ -1,6 +1,6 @@
 ## Title: Follow Group Leader
-## APIVersion: 101041
-## Author: YourName
+## APIVersion: 101045
+## Author: xIvanGx
 ## Version: 1.0.0
 ## DependsOn: LibGroupBroadcast
 
