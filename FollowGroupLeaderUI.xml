@@ -1,0 +1,57 @@
+<GuiXml>
+    <Controls>
+        <TopLevelControl name="FGL_MainUI" mouseEnabled="true" movable="true" hidden="false" clampedToScreen="true" resizeHandleSize_disable="10">
+            <Dimensions x="112" y="56" />
+            <Anchor point="CENTER" />
+            <Controls>
+                <Backdrop name="$(parent)_BG" inherits="ZO_DefaultBackdrop">
+                    <AnchorFill/>
+                </Backdrop>
+
+                <!-- <Label name="$(parent)Label" text="Not in group" font="ZoFontGameLargeBold" color="FFFFFF" verticalAlignment="CENTER" horizontalAlignment="CENTER">
+                    <Anchor point="CENTER" />
+                    <Dimensions x="50" y="30" />
+                </Label> -->
+                <Button name="$(parent)LeaderCallButton">
+                    <Textures
+                        normal ="/esoui/art/tutorial/leaderboard_tabicon_guest_up.dds"
+                        pressed ="/esoui/art/tutorial/leaderboard_tabicon_guest_down.dds"
+                        mouseOver ="/esoui/art/tutorial/leaderboard_tabicon_guest_over.dds" />
+                    <Dimensions x="48" y="48" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="4" />
+                </Button>
+
+                <Button name="$(parent)JumpNowButton">
+                    <Textures
+                        normal ="/esoui/art/inventory/inventory_tabicon_crown_up.dds"
+                        pressed ="/esoui/art/inventory/inventory_tabicon_crown_down.dds"
+                        mouseOver ="/esoui/art/inventory/inventory_tabicon_crown_over.dds" />
+                    <Dimensions x="48" y="48" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="4" />
+                </Button>
+                <Button name="$(parent)FollowLeaderButton" textureAlternative="/esoui/art/journal/leaderboard_indexicon_ava_up.dds">
+                    <Textures
+                        normal ="/esoui/art/icons/achievements_indexicon_darkanchors_up.dds"
+                        pressed ="/esoui/art/icons/achievements_indexicon_darkanchors_down.dds"
+                        mouseOver ="/esoui/art/icons/achievements_indexicon_darkanchors_over.dds" />
+                    <Dimensions x="48" y="48" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)JumpNowButton" relativePoint="TOPRIGHT" offsetX="4" />
+                </Button>
+
+                <Texture name="$(parent)Spinner" textureFile="/esoui/art/miscellaneous/timerred_64.dds" color="FF0000">
+                    <Dimensions x="48" y="48" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="4" />
+                </Texture>
+                <Button name="$(parent)CancelFollowButton">
+                    <Textures
+                        normal ="/esoui/art/buttons/cancel_up.dds"
+                        pressed ="/esoui/art/buttons/cancel_down.dds"
+                        mouseOver ="/esoui/art/buttons/cancel_over.dds" />
+                    <Dimensions x="48" y="48" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Spinner" relativePoint="TOPRIGHT" offsetX="4" />
+                </Button>
+
+            </Controls>
+        </TopLevelControl>
+    </Controls>
+</GuiXml>

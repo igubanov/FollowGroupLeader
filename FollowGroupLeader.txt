@@ -5,4 +5,7 @@
 ## DependsOn: LibGroupBroadcast
 
 FollowGroupLeader.lua
+FollowGroupLeaderUI.xml
 FollowGroupLeaderUI.lua
+
+

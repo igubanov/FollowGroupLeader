@@ -6,59 +6,56 @@ function FGLUI:Init()
 end
 
 function FGLUI:CreateMainWindow()
-    local wm = WINDOW_MANAGER
-    self.ui = wm:CreateTopLevelWindow("FGL_MainUI")
-    local ui = self.ui
-    ui:SetAnchor(TOPRIGHT, GuiRoot, TOPRIGHT, -50, 100)
-    ui:SetMovable(true)
-    ui:SetMouseEnabled(true)
-    ui:SetClampedToScreen(true)
-    ui:SetResizeToFitDescendents(true)
-    ui:SetHidden(false)
+    local ui = FGL_MainUI
+    self.ui = ui
 
     self.elements = {
-        label = wm:CreateControl(nil, ui, CT_LABEL),
-        leaderBtn = wm:CreateControl("FGL_LeaderCallButton", ui, CT_BUTTON),
-        jumpBtn = wm:CreateControl("FGL_JumpNowButton", ui, CT_BUTTON),
-        followBtn = wm:CreateControl("FGL_FollowLeaderButton", ui, CT_BUTTON),
-        spinner = wm:CreateControl(nil, ui, CT_LABEL),
-        cancelBtn = wm:CreateControl("FGL_CancelFollowButton", ui, CT_BUTTON),
+        -- label = ui:GetNamedChild("Label"),
+        leaderBtn = ui:GetNamedChild("LeaderCallButton"),
+        jumpBtn = ui:GetNamedChild("JumpNowButton"),
+        followBtn = ui:GetNamedChild("FollowLeaderButton"),
+        spinner = ui:GetNamedChild("Spinner"),
+        cancelBtn = ui:GetNamedChild("CancelFollowButton"),
     }
 
-    self.elements.label:SetFont("ZoFontGame")
-    self.elements.label:SetAnchor(TOPLEFT, ui, TOPLEFT, 10, 0)
-    self.elements.label:SetText("This addon works only in a group.")
+    self:StartSpinnerRotation(self.elements.spinner)
 
-    self.elements.leaderBtn:SetFont("ZoFontGame")
-    self.elements.leaderBtn:SetDimensions(260, 30)
-    self.elements.leaderBtn:SetAnchor(TOPLEFT, ui, TOPLEFT, 10, 0)
-    self.elements.leaderBtn:SetText("Call group to me")
     self.elements.leaderBtn:SetHandler("OnClicked", function() FGL:SendTeleportCommand() end)
-
-    self.elements.jumpBtn:SetDimensions(260, 30)
-    self.elements.jumpBtn:SetFont("ZoFontGame")
-    self.elements.jumpBtn:SetAnchor(TOPLEFT, ui, TOPLEFT, 10, 0)
-    self.elements.jumpBtn:SetText("Jump to leader")
     self.elements.jumpBtn:SetHandler("OnClicked", function() JumpToGroupLeader() end)
-
-    self.elements.followBtn:SetDimensions(260, 30)
-    self.elements.followBtn:SetFont("ZoFontGame")
-    self.elements.followBtn:SetAnchor(TOPLEFT, ui, TOPLEFT, 10, 40)
-    self.elements.followBtn:SetText("Follow leader")
     self.elements.followBtn:SetHandler("OnClicked", function() self:EnterFollowMode() end)
-
-    self.elements.spinner:SetFont("ZoFontGame")
-    self.elements.spinner:SetAnchor(TOPLEFT, ui, TOPLEFT, 10, 0)
-    self.elements.spinner:SetText("Following leader... waiting for teleport command...")
-
-    self.elements.cancelBtn:SetDimensions(260, 30)
-    self.elements.cancelBtn:SetFont("ZoFontGame")
-    self.elements.cancelBtn:SetAnchor(TOPLEFT, ui, TOPLEFT, 10, 40)
-    self.elements.cancelBtn:SetText("Cancel")
     self.elements.cancelBtn:SetHandler("OnClicked", function()
         FGL.autoFollowEnabled = false
         self:UpdateVisibility()
     end)
+
+    FGLUI:AddTooltip(self.elements.leaderBtn, "Call group to me")
+    FGLUI:AddTooltip(self.elements.jumpBtn, "Jump to leader")
+    FGLUI:AddTooltip(self.elements.followBtn, "Follow leader (auto jumpming)")
+    FGLUI:AddTooltip(self.elements.cancelBtn, "Cancel")
+    FGLUI:AddTooltip(self.elements.spinner, "Waiting leader command to jump")
+end
+
+function FGLUI:AddTooltip(control, text)
+    control:SetHandler("OnMouseEnter", function(self)
+        InitializeTooltip(InformationTooltip, self, BOTTOM, 0, -5)
+        SetTooltipText(InformationTooltip, text)
+    end)
+    control:SetHandler("OnMouseExit", function()
+        ClearTooltip(InformationTooltip)
+    end)
+end
+
+function FGLUI:StartSpinnerRotation(spinner)
+    local angle = 0
+    local rotationSpeed = 5
+
+    local function rotate()
+        angle = (angle + rotationSpeed) % 360
+        spinner:SetTextureRotation(math.rad(angle))
+    end
+
+    zo_callLater(rotate, 50)
+    EVENT_MANAGER:RegisterForUpdate("FGL_SpinnerRotation", 50, rotate)
 end
 
 function FGLUI:UpdateVisibility()
@@ -71,6 +68,7 @@ function FGLUI:UpdateVisibility()
     local grouped = IsUnitGrouped("player")
     local leader = IsUnitGroupLeader("player")
 
+    self.ui:SetHidden(not grouped)
 
     if following then
         e.spinner:SetHidden(false)
@@ -78,10 +76,10 @@ function FGLUI:UpdateVisibility()
         return
     end
 
-    if not grouped then
-        e.label:SetHidden(false)
-        return
-    end
+    -- if not grouped then
+    --     e.label:SetHidden(false)
+    --     return
+    -- end
 
     if leader then
         e.leaderBtn:SetHidden(false)
@@ -125,36 +123,4 @@ end
 
 function FGLUI:ShowPrompt()
     ZO_Dialogs_ShowDialog("FGL_CONFIRM_JUMP")
-end
-
--- TODO: remove
-function FGLUI:ShowTeleportInvite()
-    local messageId = CENTER_SCREEN_ANNOUNCE:AddMessage(EVENT_ANNOUNCEMENT_MESSAGE, CSA_EVENT_SMALL_TEXT,
-        SOUNDS.ABILITY_MORPH_CHOSEN, "Teleport to leader? [Y/N]")
-
-    local keybind = {
-        alignment = KEYBIND_STRIP_ALIGN_CENTER,
-        {
-            name = "Yes",
-            keybind = "UI_SHORTCUT_PRIMARY", -- клавиша "E" по умолчанию
-            callback = function()
-                JumpToGroupLeader()
-                FGL.awaitingConfirm = false
-            end,
-        },
-        {
-            name = "No",
-            keybind = "UI_SHORTCUT_NEGATIVE", -- клавиша "Q" по умолчанию
-            callback = function()
-                FGL.awaitingConfirm = false
-            end,
-        }
-    }
-
-    KEYBIND_STRIP:AddKeybindButtonGroup(keybind)
-
-    -- Автоматически убрать кнопки через 8 секунд
-    zo_callLater(function()
-        KEYBIND_STRIP:RemoveKeybindButtonGroup(keybind)
-    end, 8000)
 end

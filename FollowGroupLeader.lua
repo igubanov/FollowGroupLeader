@@ -43,8 +43,6 @@ end
 function FGL:SendTeleportCommand()
     FireTeleportEvent()
     StartChatInput("TP TO ME", CHAT_CHANNEL_PARTY)
-    -- NOTE: for the future
-    -- CENTER_SCREEN_ANNOUNCE:AddMessage(EVENT_ANNOUNCEMENT_MESSAGE, CSA_EVENT_SMALL_TEXT, SOUNDS.ABILITY_MORPH_CHOSEN, "TP TO ME")
 end
 
 function FGL:OnTeleportCommand()
