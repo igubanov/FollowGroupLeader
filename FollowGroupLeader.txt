@@ -3,9 +3,11 @@
 ## Author: xIvanGx
 ## Version: 1.0.0
 ## DependsOn: LibGroupBroadcast
+## SavedVariables: widgetPosition
 
 FollowGroupLeader.lua
 FollowGroupLeaderUI.xml
 FollowGroupLeaderUI.lua
+
 
 

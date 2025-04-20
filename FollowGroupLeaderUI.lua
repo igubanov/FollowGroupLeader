@@ -1,4 +1,5 @@
 FGLUI = {}
+FGLUI.widgetPositionSV = {}
 
 function FGLUI:Init()
     self:CreateMainWindow()
@@ -8,6 +9,12 @@ end
 function FGLUI:CreateMainWindow()
     local ui = FGL_MainUI
     self.ui = ui
+
+    FGLUI.widgetPositionSV = ZO_SavedVars:NewAccountWide("widgetPosition", 1, nil, {})
+    if FGLUI.widgetPositionSV.top then
+        ui:ClearAnchors()
+        ui:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, FGLUI.widgetPositionSV.left, FGLUI.widgetPositionSV.top)
+    end
 
     self.elements = {
         -- label = ui:GetNamedChild("Label"),
@@ -32,7 +39,7 @@ function FGLUI:CreateMainWindow()
     FGLUI:AddTooltip(self.elements.jumpBtn, "Jump to leader")
     FGLUI:AddTooltip(self.elements.followBtn, "Follow leader (auto jumpming)")
     FGLUI:AddTooltip(self.elements.cancelBtn, "Cancel")
-    FGLUI:AddTooltip(self.elements.spinner, "Waiting leader command to jump")
+    -- FGLUI:AddTooltip(self.elements.spinner, "Waiting leader command to jump")
 end
 
 function FGLUI:AddTooltip(control, text)
@@ -54,7 +61,6 @@ function FGLUI:StartSpinnerRotation(spinner)
         spinner:SetTextureRotation(math.rad(angle))
     end
 
-    zo_callLater(rotate, 50)
     EVENT_MANAGER:RegisterForUpdate("FGL_SpinnerRotation", 50, rotate)
 end
 
@@ -124,3 +130,10 @@ end
 function FGLUI:ShowPrompt()
     ZO_Dialogs_ShowDialog("FGL_CONFIRM_JUMP")
 end
+
+local function onControlMoved()
+    FGLUI.widgetPositionSV.left = FGL_MainUI:GetLeft()
+    FGLUI.widgetPositionSV.top = FGL_MainUI:GetTop()
+end
+
+FGL_MainUI:SetHandler("OnMoveStop", onControlMoved)
