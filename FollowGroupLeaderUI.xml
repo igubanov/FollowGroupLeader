@@ -1,4 +1,12 @@
 <GuiXml>
+    <Animations>
+        <AnimationTimeline name="ScaleAnimationLoop">
+            <Animations>
+                <ScaleAnimation duration="500" startScale="1.0" endScale="0.5"/>
+                <ScaleAnimation duration="500" delay="500" startScale="0.5" endScale="1.0"/>
+            </Animations>
+        </AnimationTimeline>
+    </Animations>
     <Controls>
         <TopLevelControl name="FGL_MainUI" mouseEnabled="true" movable="true" hidden="false" clampedToScreen="true" resizeHandleSize_disable="10">
             <Dimensions x="112" y="56" />
@@ -46,14 +54,25 @@
                     <Dimensions x="48" y="48" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)JumpNowButton" relativePoint="TOPRIGHT" offsetX="4" />
                 </Button>
-
-                <Texture name="$(parent)Spinner" textureFile="/esoui/art/miscellaneous/timerred_64.dds" color="FF0000">
+                
+                <Button name="$(parent)Spinner" >
                     <Dimensions x="48" y="48" />
+                    <Controls>
+                        <Texture textureFile="/esoui/art/miscellaneous/timerred_64.dds" color="FF0000">
+                            <Anchor point="CENTER" relativeTo="$(parent)" />
+                            <Dimensions x="48" y="48" />
+                            <OnInitialized>
+                                local animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ScaleAnimationLoop", self)
+                                animation:SetPlaybackType(ANIMATION_PLAYBACK_LOOP, LOOP_INDEFINITELY)
+                                animation:PlayFromStart()
+                            </OnInitialized>
+                        </Texture>
+                    </Controls>
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="4" />
                     <OnInitialized> self.data = { tooltipText = "Waiting leader command to jump" } </OnInitialized>
                     <OnMouseEnter> ZO_Options_OnMouseEnter(self) </OnMouseEnter>
                     <OnMouseExit> ZO_Options_OnMouseExit(self) </OnMouseExit>
-                </Texture>
+                </Button>
                 <Button name="$(parent)CancelFollowButton">
                     <OnInitialized> self.data = { tooltipText = "Cancel" } </OnInitialized>
                     <OnMouseEnter> ZO_Options_OnMouseEnter(self) </OnMouseEnter>

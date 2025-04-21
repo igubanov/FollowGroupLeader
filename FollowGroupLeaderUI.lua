@@ -19,8 +19,6 @@ function FGLUI:CreateMainWindow()
         cancelBtn = ui:GetNamedChild("CancelFollowButton"),
     }
 
-    self:StartSpinnerRotation(self.elements.spinner)
-
     self.elements.leaderBtn:SetHandler("OnClicked", function() FGL:SendTeleportCommand() end)
     self.elements.jumpBtn:SetHandler("OnClicked", function() JumpToGroupLeader() end)
     self.elements.followBtn:SetHandler("OnClicked", function() self:EnterFollowMode() end)
@@ -28,18 +26,6 @@ function FGLUI:CreateMainWindow()
         FGL.autoFollowEnabled = false
         self:UpdateVisibility()
     end)
-end
-
-function FGLUI:StartSpinnerRotation(spinner)
-    local angle = 0
-    local rotationSpeed = 5
-
-    local function rotate()
-        angle = (angle + rotationSpeed) % 360
-        spinner:SetTextureRotation(math.rad(angle))
-    end
-
-    EVENT_MANAGER:RegisterForUpdate("FGL_SpinnerRotation", 50, rotate)
 end
 
 function FGLUI:UpdateVisibility()
