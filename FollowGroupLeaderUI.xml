@@ -13,6 +13,9 @@
                     <Dimensions x="50" y="30" />
                 </Label> -->
                 <Button name="$(parent)LeaderCallButton">
+                    <OnInitialized> self.data = { tooltipText = "Call group to me" } </OnInitialized>
+                    <OnMouseEnter> ZO_Options_OnMouseEnter(self) </OnMouseEnter>
+                    <OnMouseExit> ZO_Options_OnMouseExit(self) </OnMouseExit>
                     <Textures
                         normal ="/esoui/art/tutorial/leaderboard_tabicon_guest_up.dds"
                         pressed ="/esoui/art/tutorial/leaderboard_tabicon_guest_down.dds"
@@ -22,6 +25,9 @@
                 </Button>
 
                 <Button name="$(parent)JumpNowButton">
+                    <OnInitialized> self.data = { tooltipText = "Jump to leader" } </OnInitialized>
+                    <OnMouseEnter> ZO_Options_OnMouseEnter(self) </OnMouseEnter>
+                    <OnMouseExit> ZO_Options_OnMouseExit(self) </OnMouseExit>
                     <Textures
                         normal ="/esoui/art/inventory/inventory_tabicon_crown_up.dds"
                         pressed ="/esoui/art/inventory/inventory_tabicon_crown_down.dds"
@@ -30,6 +36,9 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="4" />
                 </Button>
                 <Button name="$(parent)FollowLeaderButton" textureAlternative="/esoui/art/journal/leaderboard_indexicon_ava_up.dds">
+                    <OnInitialized> self.data = { tooltipText = "Follow leader (auto jumpming)" } </OnInitialized>
+                    <OnMouseEnter> ZO_Options_OnMouseEnter(self) </OnMouseEnter>
+                    <OnMouseExit> ZO_Options_OnMouseExit(self) </OnMouseExit>
                     <Textures
                         normal ="/esoui/art/icons/achievements_indexicon_darkanchors_up.dds"
                         pressed ="/esoui/art/icons/achievements_indexicon_darkanchors_down.dds"
@@ -41,8 +50,14 @@
                 <Texture name="$(parent)Spinner" textureFile="/esoui/art/miscellaneous/timerred_64.dds" color="FF0000">
                     <Dimensions x="48" y="48" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="4" />
+                    <OnInitialized> self.data = { tooltipText = "Waiting leader command to jump" } </OnInitialized>
+                    <OnMouseEnter> ZO_Options_OnMouseEnter(self) </OnMouseEnter>
+                    <OnMouseExit> ZO_Options_OnMouseExit(self) </OnMouseExit>
                 </Texture>
                 <Button name="$(parent)CancelFollowButton">
+                    <OnInitialized> self.data = { tooltipText = "Cancel" } </OnInitialized>
+                    <OnMouseEnter> ZO_Options_OnMouseEnter(self) </OnMouseEnter>
+                    <OnMouseExit> ZO_Options_OnMouseExit(self) </OnMouseExit>
                     <Textures
                         normal ="/esoui/art/buttons/cancel_up.dds"
                         pressed ="/esoui/art/buttons/cancel_down.dds"

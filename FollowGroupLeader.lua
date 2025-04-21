@@ -22,22 +22,16 @@ function FGL.OnAddOnLoaded(event, addonName)
         end
     end
 
-    FGLUI = FGLUI or {}
     FGLUI:Init()
-    FGL:onGroupChanged()
 
-    local function onGroupChanged()
-        FGL:onGroupChanged()
+    local function onGroupChanged(eventId)
+        FGL.autoFollowEnabled = FGL.autoFollowEnabled and IsUnitGrouped("player") and not IsUnitGroupLeader("player")
+        FGLUI:UpdateVisibility()
     end
 
     EVENT_MANAGER:RegisterForEvent(FGL.name .. "_GROUP_UPDATE", EVENT_GROUP_MEMBER_JOINED, onGroupChanged)
     EVENT_MANAGER:RegisterForEvent(FGL.name .. "_GROUP_UPDATE", EVENT_GROUP_MEMBER_LEFT, onGroupChanged)
     EVENT_MANAGER:RegisterForEvent(FGL.name .. "_GROUP_UPDATE", EVENT_LEADER_UPDATE, onGroupChanged)
-end
-
-function FGL:onGroupChanged()
-    FGL:OnGroupStatusChanged()
-    FGLUI:UpdateVisibility()
 end
 
 function FGL:SendTeleportCommand()
@@ -59,12 +53,6 @@ function FGL:OnTeleportCommand()
     elseif not FGL.awaitingConfirm then
         FGL.awaitingConfirm = true
         FGLUI:ShowPrompt()
-    end
-end
-
-function FGL:OnGroupStatusChanged()
-    if not IsUnitGrouped("player") or IsUnitGroupLeader("player") == false then
-        FGL.autoFollowEnabled = false
     end
 end
 

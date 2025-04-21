@@ -1,11 +1,6 @@
 FGLUI = {}
 FGLUI.widgetPositionSV = {}
 
-function FGLUI:Init()
-    self:CreateMainWindow()
-    self:CreateConfirmDialog()
-end
-
 function FGLUI:CreateMainWindow()
     local ui = FGL_MainUI
     self.ui = ui
@@ -17,7 +12,6 @@ function FGLUI:CreateMainWindow()
     end
 
     self.elements = {
-        -- label = ui:GetNamedChild("Label"),
         leaderBtn = ui:GetNamedChild("LeaderCallButton"),
         jumpBtn = ui:GetNamedChild("JumpNowButton"),
         followBtn = ui:GetNamedChild("FollowLeaderButton"),
@@ -33,22 +27,6 @@ function FGLUI:CreateMainWindow()
     self.elements.cancelBtn:SetHandler("OnClicked", function()
         FGL.autoFollowEnabled = false
         self:UpdateVisibility()
-    end)
-
-    FGLUI:AddTooltip(self.elements.leaderBtn, "Call group to me")
-    FGLUI:AddTooltip(self.elements.jumpBtn, "Jump to leader")
-    FGLUI:AddTooltip(self.elements.followBtn, "Follow leader (auto jumpming)")
-    FGLUI:AddTooltip(self.elements.cancelBtn, "Cancel")
-    -- FGLUI:AddTooltip(self.elements.spinner, "Waiting leader command to jump")
-end
-
-function FGLUI:AddTooltip(control, text)
-    control:SetHandler("OnMouseEnter", function(self)
-        InitializeTooltip(InformationTooltip, self, BOTTOM, 0, -5)
-        SetTooltipText(InformationTooltip, text)
-    end)
-    control:SetHandler("OnMouseExit", function()
-        ClearTooltip(InformationTooltip)
     end)
 end
 
@@ -71,8 +49,8 @@ function FGLUI:UpdateVisibility()
     end
 
     local following = FGL.autoFollowEnabled
-    local grouped = IsUnitGrouped("player")
     local leader = IsUnitGroupLeader("player")
+    local grouped = leader or IsUnitGrouped("player")
 
     self.ui:SetHidden(not grouped)
 
@@ -81,11 +59,6 @@ function FGLUI:UpdateVisibility()
         e.cancelBtn:SetHidden(false)
         return
     end
-
-    -- if not grouped then
-    --     e.label:SetHidden(false)
-    --     return
-    -- end
 
     if leader then
         e.leaderBtn:SetHidden(false)
@@ -131,9 +104,19 @@ function FGLUI:ShowPrompt()
     ZO_Dialogs_ShowDialog("FGL_CONFIRM_JUMP")
 end
 
-local function onControlMoved()
-    FGLUI.widgetPositionSV.left = FGL_MainUI:GetLeft()
-    FGLUI.widgetPositionSV.top = FGL_MainUI:GetTop()
-end
+function FGLUI:Init()
+    self:CreateMainWindow()
+    self:CreateConfirmDialog()
 
-FGL_MainUI:SetHandler("OnMoveStop", onControlMoved)
+    local onceActivatedEventSubscriberName = FGL.name .. "_ONCE_ACTIVATED_EVENT";
+    EVENT_MANAGER:RegisterForEvent(onceActivatedEventSubscriberName, EVENT_PLAYER_ACTIVATED,
+        function()
+            EVENT_MANAGER:UnregisterForEvent(onceActivatedEventSubscriberName, EVENT_PLAYER_ACTIVATED)
+            FGLUI:UpdateVisibility()
+        end)
+
+    self.ui:SetHandler("OnMoveStop", function()
+        self.widgetPositionSV.left = FGLUI.ui:GetLeft()
+        self.widgetPositionSV.top = FGLUI.ui:GetTop()
+    end)
+end
